@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 #{title}
+    div
+      h3 Name: #{tutorName}
+      h5 Calendar type: #{calendarType}
+
+  if errors
+   ul
+    for error in errors
+     li!= error.msg

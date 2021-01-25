@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "devstart": "nodemon ./bin/www",
+    "start": "node ./server/bin/www",
+    "devstart": "nodemon ./server/bin/www",
     "serverstart": "DEBUG=express-locallibrary-tutoring:* & npm run devstart"
   },
   "dependencies": {
