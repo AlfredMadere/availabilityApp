@@ -1,6 +1,8 @@
 
 const { body,validationResult } = require('express-validator');
 const googleDriver = require('../drivers/googleDriver');
+const AvailabilityCalendar = require('../models/availabilityCalendar');
+
 //import availabilityCalendar from "../models/availabilityCalendar";
 
 
@@ -13,9 +15,15 @@ exports.get_tutor_availability = function(req, res, next) {
 exports.show_availability = function(req, res, next){
     let tutorName = req.query.name;
     let calendarType = req.query.caltype;
-    let regex = /Marcus.*Availability/i;
-    googleDriver.getEvents(regex)
-    .then((res) => console.log(res))
+    let regex = `/${tutorName}.*${calendarType}/i`;
+    console.log(regex);
+    googleDriver.getEvents(/Maya.*committal/i)
+    .then((events) => {
+        let availabilityCalendar = new AvailabilityCalendar(events, 15);
+        let availability = availabilityCalendar.getGroupedAvailability();
+        res.render('availability_details', {title: 'Availability details', tutorName: tutorName, calendarType: calendarType, availability: availability});
+
+    })
     .catch(err => console.log(err));
     //create regex
     /*
@@ -28,6 +36,6 @@ exports.show_availability = function(req, res, next){
     then send the printable content over to the view to be rendered
     .then
     */
-    res.render('availability_details', {title: 'Availability details', tutorName: tutorName, calendarType: calendarType});
+   
 };
 
