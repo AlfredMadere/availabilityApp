@@ -1,6 +1,6 @@
 
 const { body,validationResult } = require('express-validator');
-
+const googleDriver = require('../drivers/googleDriver');
 //import availabilityCalendar from "../models/availabilityCalendar";
 
 
@@ -13,6 +13,10 @@ exports.get_tutor_availability = function(req, res, next) {
 exports.show_availability = function(req, res, next){
     let tutorName = req.query.name;
     let calendarType = req.query.caltype;
+    let regex = /Marcus.*Availability/i;
+    googleDriver.getEvents(regex)
+    .then((res) => console.log(res))
+    .catch(err => console.log(err));
     //create regex
     /*
     let events = googleDriver.getEvents

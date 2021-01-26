@@ -1,13 +1,12 @@
-/*
+
 const {google} = require('googleapis');
 
 const {OAuth2} = google.auth;
 
 const oAuth2Client = new OAuth2('286187659171-8lsogbilkvskbk0aojikls0ml28r7n2e.apps.googleusercontent.com', 'ValmFXd__39RdlBcIGQPPrJd');
 
-const {listEvents} = require('./listEvents');
-const {calendarIds, getCalendarId} = require('./calendars');
-const getWeeklyTutorAvailability = require('./getTutorAvailability').default;
+
+const waitUntil = require('../util/waitUntil');
 
 
 oAuth2Client.setCredentials({
@@ -16,27 +15,23 @@ oAuth2Client.setCredentials({
 
 const googleCalendar = google.calendar({version: 'v3', auth: oAuth2Client});
 
+let googleDriver = {};
+
 
 function getEvents (regex){
-    getCalendarId(regex)
+    return getCalendarId(regex)
     .then(id => {
-        listEvents(id, "");
-    })
-    .catch(err => console.log(err));
+        return listEvents(id, "");
+    });
 }
 
-const getCalendarId = async function (calMatch, calendar) {
+const getCalendarId = async function (calMatch) {
     let calendarList = null;
-    if(!calendarList){
-        calendar.calendarList.list({}, (err, res) => {
-            if (err) return console.log('The API returned an error: ' + err);
-            //console.log(res.data);
-            calendarList = res.data.items;
-        });
-       await waitUntil(() => {return calendarList}, 3000);
-    }
-    //console.log(calendarList);
-
+    googleCalendar.calendarList.list({}, (err, res) => {
+        if (err) return console.log('The API returned an error: ' + err);
+        calendarList = res.data.items;
+    });
+    await waitUntil(() => {return calendarList}, 3000);
     for(let i=0; i<calendarList.length; i++){
         let cal = calendarList[i];
         //console.log(cal.summary, cal.id);
@@ -48,4 +43,26 @@ const getCalendarId = async function (calMatch, calendar) {
     return Promise.reject("No matching calendar");
 };
 
-*/
+//warning you can only call this once
+const listEvents = async function (calendarId, query) {
+    let eventsList = null;
+    googleCalendar.events.list({
+        calendarId: calendarId,
+        timeMin: (new Date()).toISOString(),
+        maxResults: 20,
+        singleEvents: true,
+        orderBy: 'startTime',
+        q: query,
+    }, (err, res) => {
+        if (err) return console.log('The API returned an error: ' + err);
+        eventsList = res.data.items;
+    });
+    await waitUntil(() => {return eventsList}, 10000);
+    return eventsList.length ? 
+        Promise.resolve(eventsList) : 
+        Promise.reject("did not find any events matching query");
+}
+
+googleDriver.getEvents = getEvents;
+
+module.exports = googleDriver;
