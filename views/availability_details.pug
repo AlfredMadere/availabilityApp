@@ -2,11 +2,13 @@ extends layout
 
 block content
   h1 #{title}
-    div
-      h3 Name: #{tutorName}
-      h5 Calendar type: #{calendarType}
-      h2 some calendar data
-      p #{JSON.stringify(availability)}
+    body
+      div
+        h3 Name: #{tutorName}
+        h5 Calendar type: #{calendarType}
+      div
+        h4 some calendar data
+          p #{availability}
 
   if errors
    ul

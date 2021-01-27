@@ -21,7 +21,7 @@ exports.show_availability = function(req, res, next){
     .then((events) => {
         let availabilityCalendar = new AvailabilityCalendar(events, 15);
         let availability = availabilityCalendar.getGroupedAvailability();
-        res.render('availability_details', {title: 'Availability details', tutorName: tutorName, calendarType: calendarType, availability: availability});
+        res.render('availability_details', {title: 'Availability details', tutorName: tutorName, calendarType: calendarType, availability: availabilityCalendar.stringifiedAvailability});
 
     })
     .catch(err => console.log(err));

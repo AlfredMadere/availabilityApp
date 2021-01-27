@@ -11,10 +11,25 @@ class AvailabilityCalendar {
         this.arrayLength = Math.floor((this.endTime - this.startTime)/this.millisPerChar) +1;
         console.log(this.arrayLength);
         this.virtualSchedule = new Array(this.arrayLength).fill(" ");
+        this.groupedAvailability = [];
+        this.stringifiedAvailability = "";
     }
     getGroupedAvailability(){
          this.generateVirtualSchedule();
+         this.groupedAvailability = this.orderedAvailabilityObjects();
+         this.stringifyGroupedAvailability();
          return this.orderedAvailabilityObjects();
+    }
+    stringifyGroupedAvailability(){
+        let outPut = "";
+        this.groupedAvailability.forEach((day) => {
+            let timeSlots = day.events.map((event) => {
+                return `${event.start.toLocaleString(DateTime.TIME_SIMPLE)} - ${event.end.toLocaleString(DateTime.TIME_SIMPLE)}`;
+            }).join(", ");
+            outPut = `${outPut}
+            ${day.dow}: ${timeSlots}`;
+        });
+        this.stringifiedAvailability = outPut;
     }
     generateVirtualSchedule(){
         //should be in order of start date
