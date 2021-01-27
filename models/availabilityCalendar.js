@@ -11,15 +11,15 @@ class AvailabilityCalendar {
         this.arrayLength = Math.floor((this.endTime - this.startTime)/this.millisPerChar) +1;
         console.log(this.arrayLength);
         this.virtualSchedule = new Array(this.arrayLength).fill(" ");
-        this.groupedAvailability = [];
+        this.generateVirtualSchedule();
+        this.groupedAvailability = []
+        this.groupAvailabilityObjects();
         this.stringifiedAvailability = "";
+        this.stringifyGroupedAvailability();
+        this.htmlReadyAvailability = [];
+        this.generateHtmlReadyAvailability();
     }
-    getGroupedAvailability(){
-         this.generateVirtualSchedule();
-         this.groupedAvailability = this.orderedAvailabilityObjects();
-         this.stringifyGroupedAvailability();
-         return this.orderedAvailabilityObjects();
-    }
+    
     stringifyGroupedAvailability(){
         let outPut = "";
         this.groupedAvailability.forEach((day) => {
@@ -66,7 +66,7 @@ class AvailabilityCalendar {
             }
         });
     }
-    orderedAvailabilityObjects(){
+    groupAvailabilityObjects(){
         let index = 0;
         let availabilityObjects = [];
         while(index<this.virtualSchedule.length){
@@ -92,8 +92,18 @@ class AvailabilityCalendar {
             }
             currentDay.events.push(event);
         });
-        return days;
+        this.groupedAvailability = days;
+    }
+    generateHtmlReadyAvailability(){
+        this.groupedAvailability.forEach((day) => {
+            let timeSlots = day.events.map((event) => {
+                return `${event.start.toLocaleString(DateTime.TIME_SIMPLE)} - ${event.end.toLocaleString(DateTime.TIME_SIMPLE)}`;
+            }).join(", ");
+            this.htmlReadyAvailability.push(`${day.dow}: ${timeSlots}`)
+        });
     }
 }
+
+
 
 module.exports = AvailabilityCalendar;

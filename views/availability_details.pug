@@ -1,16 +1,24 @@
 extends layout
 
+
 block content
+
   h1 #{title}
     body
       div
         h3 Name: #{tutorName}
         h5 Calendar type: #{calendarType}
+        hr
       div
-        h4 some calendar data
-          p #{availability}
+        each day in availability
+          ul
+            li(style="font-size: 14px")=day
+        else
+          p no availability
 
   if errors
    ul
     for error in errors
      li!= error.msg
+
+     

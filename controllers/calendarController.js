@@ -20,8 +20,7 @@ exports.show_availability = function(req, res, next){
     googleDriver.getEvents(/Maya.*committal/i)
     .then((events) => {
         let availabilityCalendar = new AvailabilityCalendar(events, 15);
-        let availability = availabilityCalendar.getGroupedAvailability();
-        res.render('availability_details', {title: 'Availability details', tutorName: tutorName, calendarType: calendarType, availability: availabilityCalendar.stringifiedAvailability});
+        res.render('availability_details', {title: 'Availability details', tutorName: tutorName, calendarType: calendarType, availability: availabilityCalendar.htmlReadyAvailability});
 
     })
     .catch(err => console.log(err));
