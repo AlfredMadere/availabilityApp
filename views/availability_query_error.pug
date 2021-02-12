@@ -1,0 +1,19 @@
+extends layout
+
+
+block content
+
+  h1 #{title}
+  hr
+  body
+    div
+      h5 Had some issues with the following query: #{tutorName}, #{calendarType}
+    div
+      p(style="font-size=12px") #{error}
+
+  if errors
+   ul
+    for error in errors
+     li!= error.msg
+
+     

@@ -15,15 +15,20 @@ exports.get_tutor_availability = function(req, res, next) {
 exports.show_availability = function(req, res, next){
     let tutorName = req.query.name;
     let calendarType = req.query.caltype;
-    let regex = `/${tutorName}.*${calendarType}/i`;
+    let startDate = new Date(req.query.startDate);
+    console.log(startDate);
+    let regexString = `${tutorName}.*${calendarType}`;
+    let regex = new RegExp(regexString, 'i');
     console.log(regex);
-    googleDriver.getEvents(/Maya.*committal/i)
+    googleDriver.getEvents(regex)
     .then((events) => {
-        let availabilityCalendar = new AvailabilityCalendar(events, 15);
-        res.render('availability_details', {title: 'Availability details', tutorName: tutorName, calendarType: calendarType, availability: availabilityCalendar.htmlReadyAvailability});
+        let availabilityCalendar = new AvailabilityCalendar(events, 15, startDate);
+        res.render('availability_details', {title: 'Availability details', tutorName: tutorName, calendarType: calendarType === "((?!committal).)*$" ? "current" : calendarType, availability: availabilityCalendar.htmlReadyAvailability});
 
     })
-    .catch(err => console.log(err));
+    .catch((err) => {
+        res.render('availability_query_error', {title: 'Availability Query Error', tutorName: tutorName, calendarType: calendarType === "`((?!committal).)*$`" ? "current" : calendarType, error: err});
+    });
     //create regex
     /*
     let events = googleDriver.getEvents

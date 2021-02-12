@@ -58,9 +58,7 @@ const listEvents = async function (calendarId, query) {
         eventsList = res.data.items;
     });
     await waitUntil(() => {return eventsList}, 10000);
-    return eventsList.length ? 
-        Promise.resolve(eventsList) : 
-        Promise.reject("did not find any events matching query");
+    return Promise.resolve(eventsList);
 }
 
 googleDriver.getEvents = getEvents;

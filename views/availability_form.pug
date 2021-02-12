@@ -9,10 +9,13 @@ block content
       input(type='text' placeholder='Maya' name='name' required)
     div.form-group
       label(for="committal") Committal Calendar
-      input(type="radio" id="committal" name="caltype" value="committal")
+      input(type="radio" id="committal" name="caltype" value="committal" required)
       br
       label(for="current") Current Calendar
-      input(id="current" name="caltype" value="current" type="radio")
+      input(id="current" name="caltype" value="((?!committal).)*$" type="radio" required)
+      br
+      label(for="startDate") Start Date 
+      input(id="startDate" type="date" name="startDate")
     button(type='submit') Submit
 
   if errors

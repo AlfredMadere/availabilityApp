@@ -8,6 +8,8 @@ block content
       div
         h3 Name: #{tutorName}
         h5 Calendar type: #{calendarType}
+        if calendarType==="current"
+          p(style="font-size: 14px") calendar name does not include string "committal"
         hr
       div
         each day in availability
