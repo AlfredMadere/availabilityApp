@@ -1,7 +1,7 @@
 const {DateTime} = require('luxon');
 
 class AvailabilityCalendar {
-    constructor(events, accuracy, startDate){
+    constructor(events, accuracy, startDate, tz){
         this.allEvents = events;
         this.startTime = startDate;
         this.startTime.setHours(24,0,0,0);
@@ -16,7 +16,7 @@ class AvailabilityCalendar {
         this.stringifiedAvailability = "";
         this.stringifyGroupedAvailability();
         this.htmlReadyAvailability = [];
-        this.generateHtmlReadyAvailability();
+        this.generateHtmlReadyAvailability(tz);
     }
     
     stringifyGroupedAvailability(){
@@ -93,14 +93,18 @@ class AvailabilityCalendar {
         });
         this.groupedAvailability = days;
     }
-    generateHtmlReadyAvailability(){
+    generateHtmlReadyAvailability(tz){
         this.groupedAvailability.forEach((day) => {
             let timeSlots = day.events.map((event) => {
-                return `${event.start.toLocaleString(DateTime.TIME_SIMPLE)} - ${event.end.toLocaleString(DateTime.TIME_SIMPLE)}`;
+                console.log("timezone", tz);
+                let eventStart = event.start.setZone(tz);
+                let eventEnd = event.end.setZone(tz);
+                return `${eventStart.toLocaleString(DateTime.TIME_SIMPLE)} - ${eventEnd.toLocaleString(DateTime.TIME_SIMPLE)}`;
             }).join(", ");
             this.htmlReadyAvailability.push(`${day.dow}(${day.events[0].start.toLocaleString({month: 'short', day: 'numeric'})}): ${timeSlots}`);
         });
     }
+   
 }
 
 

@@ -9,13 +9,20 @@ block content
       input(type='text' placeholder='Maya' name='name' required)
     div.form-group
       label(for="committal") Committal Calendar
-      input(type="radio" id="committal" name="caltype" value="committal" required)
+      input(type="radio" id="committal" name="caltype" value=".*committal" required)
       br
       label(for="current") Current Calendar
-      input(id="current" name="caltype" value="((?!committal).)*$" type="radio" required)
+      input(id="current" name="caltype" value="(?!.*Committal)" type="radio" required)
       br
       label(for="startDate") Start Date 
       input(id="startDate" type="date" name="startDate")
+      br
+      label(for="timeZone") Time Zone 
+      select(id="timeZone" name="timeZone")
+        option(value='America/New_York') Eastern
+        option(value='America/Chicago' selected='selected') Central
+        option(value='America/Denver') Mountain
+        option(value='America/Los_Angeles') West Coast
     button(type='submit') Submit
 
   if errors
