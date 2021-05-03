@@ -18,10 +18,10 @@ const googleCalendar = google.calendar({version: 'v3', auth: oAuth2Client});
 let googleDriver = {};
 
 
-function getEvents (regex){
+function getEvents (regex, start){
     return getCalendarId(regex)
     .then(id => {
-        return listEvents(id, "");
+        return listEvents(id, start, "");
     });
 }
 
@@ -44,11 +44,11 @@ const getCalendarId = async function (calMatch) {
 };
 
 //warning you can only call this once
-const listEvents = async function (calendarId, query) {
+const listEvents = async function (calendarId, start, query) {
     let eventsList = null;
     googleCalendar.events.list({
         calendarId: calendarId,
-        timeMin: (new Date()).toISOString(),
+        timeMin: start,
         maxResults: 20,
         singleEvents: true,
         orderBy: 'startTime',

@@ -40,9 +40,11 @@ class AvailabilityCalendar {
             return /tutoring/i.test(event.summary);
         });
         availabilityEvents.forEach((event) => {
+            //console.log("start time", this.startTime.toLocaleString(DateTime.DATETIME_FULL));
+            //console.log("event start time", event.start.dateTime.toLocalString(DateTime.DATETIME_FULL))
             let startIndex = ((Date.parse(event.start.dateTime) - this.startTime.getTime())/this.millisPerChar) < 0 ? 0 : Math.floor((Date.parse(event.start.dateTime) - this.startTime.getTime())/this.millisPerChar);
-            //console.log("start of free times", startIndex);
             let endIndex = (Date.parse(event.end.dateTime) - this.startTime.getTime())/this.millisPerChar;
+
             for(let i = startIndex; i < endIndex; i++){
                 if(i>=this.virtualSchedule.length){
                     break;
@@ -92,6 +94,7 @@ class AvailabilityCalendar {
             currentDay.events.push(event);
         });
         this.groupedAvailability = days;
+        console.log("grouped availability", this.groupedAvailability)
     }
     generateHtmlReadyAvailability(tz){
         this.groupedAvailability.forEach((day) => {
